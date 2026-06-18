@@ -188,6 +188,7 @@ body {
 
 .hero__logo {
   width: 240px;
+  height: auto;
   max-width: 60%;
   margin-bottom: 28px;
 }
@@ -478,6 +479,7 @@ body {
 
 .footer__logo {
   width: 130px;
+  height: auto;
   margin-bottom: 16px;
   opacity: .9;
 }
