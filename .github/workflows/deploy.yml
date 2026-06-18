@@ -1,4 +1,4 @@
-name: Deploy via FTP (TurboCloud)
+name: Deploy via SFTP (TurboCloud)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch: {} # permite rodar manualmente pela aba Actions
 
 concurrency:
-  group: ftp-deploy
+  group: sftp-deploy
   cancel-in-progress: true
 
 jobs:
@@ -16,26 +16,30 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: Sincronizar arquivos via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          # Pasta de destino no servidor. Se a conta FTP já aponta para a
-          # pasta certa, deixe o secret vazio que ele usa "./".
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
-          # Protocolo: "ftp" (padrão) ou "ftps" se a TurboCloud suportar.
-          protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}
-          # Pasta local enviada (raiz do repo).
-          local-dir: ./
-          # Não envia arquivos de projeto que não fazem parte do site.
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/node_modules/**
-            **/README.md
-            **/.gitignore
-            **/lh-*.json
-            **/lh-report*
+      - name: Instalar lftp
+        run: sudo apt-get update -y && sudo apt-get install -y lftp
+
+      - name: Enviar arquivos via SFTP
+        env:
+          SFTP_SERVER: ${{ secrets.FTP_SERVER }}
+          SFTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          SFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          SFTP_PORT: ${{ vars.SFTP_PORT || '22' }}
+          # Pasta de destino no servidor. Se a conta SFTP já cai na pasta
+          # certa, deixe o secret vazio que ele usa "./".
+          REMOTE_DIR: ${{ secrets.FTP_SERVER_DIR || './' }}
+        run: |
+          lftp -c "
+            set sftp:auto-confirm yes;
+            set net:timeout 15;
+            set net:max-retries 3;
+            set net:reconnect-interval-base 5;
+            open -u '$SFTP_USERNAME','$SFTP_PASSWORD' -p $SFTP_PORT sftp://$SFTP_SERVER;
+            mirror --reverse --verbose --parallel=4 \
+              --exclude '^\.git' \
+              --exclude '^\.github' \
+              --exclude '^node_modules' \
+              --exclude-glob 'lh-*.json' \
+              --exclude-glob '*.md' \
+              ./ '$REMOTE_DIR';
+          "
