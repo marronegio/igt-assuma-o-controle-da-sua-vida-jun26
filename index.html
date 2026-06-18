@@ -15,8 +15,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- CSS crítico bloqueante (pequeno) -->
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Favicon inline (evita request/404 ao /favicon.ico) -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23c1121a'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='20' font-weight='bold' text-anchor='middle' fill='%23fff'%3EC%3C/text%3E%3C/svg%3E" />
+
+  <!-- CSS crítico bloqueante (pequeno). ?v= fura o cache do CDN a cada release. -->
+  <link rel="stylesheet" href="styles.css?v=2" />
 
   <!-- Fontes: carregadas sem bloquear a renderização -->
   <link rel="stylesheet"
@@ -52,7 +56,7 @@
     <div class="hero__overlay" aria-hidden="true"></div>
     <div class="hero__inner">
       <div class="hero__copy">
-        <img class="hero__logo" src="images/logo-comando.webp" width="480" height="237"
+        <img class="hero__logo" src="images/logo-comando.webp" width="640" height="315"
           alt="Comando — Assuma o Comando da Sua Vida" />
         <h1 class="hero__headline">
           Descubra o ciclo invisível que te faz <span class="hl">começar tudo</span> e <span class="hl">terminar
@@ -151,7 +155,7 @@
   </main>
 
   <footer class="footer">
-    <img class="footer__logo" src="images/logo-comando.webp" width="480" height="237" loading="lazy" alt="Comando" />
+    <img class="footer__logo" src="images/logo-comando.webp" width="640" height="315" loading="lazy" alt="Comando" />
     <p>© 2026 Geronimo Theml · Assuma o Comando da Sua Vida</p>
   </footer>
 
