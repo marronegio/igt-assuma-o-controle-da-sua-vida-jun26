@@ -1,0 +1,41 @@
+name: Deploy via FTP (TurboCloud)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {} # permite rodar manualmente pela aba Actions
+
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Sincronizar arquivos via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Pasta de destino no servidor. Se a conta FTP já aponta para a
+          # pasta certa, deixe o secret vazio que ele usa "./".
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          # Protocolo: "ftp" (padrão) ou "ftps" se a TurboCloud suportar.
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+          # Pasta local enviada (raiz do repo).
+          local-dir: ./
+          # Não envia arquivos de projeto que não fazem parte do site.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/node_modules/**
+            **/README.md
+            **/.gitignore
+            **/lh-*.json
+            **/lh-report*
