@@ -170,7 +170,8 @@
       <p class="modal__sub">Preencha seus dados para avançar para o pagamento.</p>
 
       <form class="checkout-form" id="checkoutForm" novalidate>
-        <!-- Campos ocultos: UTMs + data do preenchimento -->
+        <!-- Campos ocultos: identificação do formulário + UTMs + data do preenchimento -->
+        <input type="hidden" id="formName" name="form-name" value="ASSUMA O COMANDO AGO26 - LP INGRESSOS" />
         <input type="hidden" id="utmCampaign" name="utm_campaign" />
         <input type="hidden" id="utmMedium" name="utm_medium" />
         <input type="hidden" id="utmSource" name="utm_source" />
@@ -445,6 +446,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const lead = {
+        'form-name': document.getElementById('formName').value,
         name: document.getElementById('leadName').value.trim(),
         email: document.getElementById('leadEmail').value.trim(),
         ddi: currentCountry.ddi,
