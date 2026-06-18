@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../styles.css?v=3" />
   <style>
     /* ---------- PÁGINA DE OBRIGADO ---------- */
     .thanks {
@@ -151,7 +151,7 @@
           <span>90%</span>
         </div>
         <div class="progress__track">
-          <div class="progress__fill" style="width:90%"></div>
+          <div class="progress__fill" style="--progress:90%"></div>
         </div>
       </div>
 
@@ -164,7 +164,7 @@
         <strong>Atenção:</strong> é ao vivo e sem replay — todos os avisos e o link chegam pelo grupo.
       </div>
 
-      <a href="#" class="btn btn--primary btn--lg reveal reveal--delay-3">Entre no grupo agora</a>
+      <a href="https://links.igtcoaching.com.br/assuma-o-comando-grupos-wpp" class="btn btn--primary btn--lg reveal reveal--delay-3">Entre no grupo agora</a>
     </div>
   </main>
 
@@ -174,12 +174,20 @@
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
+          // preenche a barra de progresso ao aparecer
+          const fill = entry.target.querySelector('.progress__fill');
+          if (fill) setTimeout(() => fill.classList.add('is-filled'), 350);
           io.unobserve(entry.target);
         }
       });
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // Redireciona automaticamente para o grupo do WhatsApp após 5 segundos
+    setTimeout(function () {
+      window.location.href = 'https://links.igtcoaching.com.br/assuma-o-comando-grupos-wpp';
+    }, 5000);
   </script>
 
 
