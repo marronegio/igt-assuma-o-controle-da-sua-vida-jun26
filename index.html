@@ -5,24 +5,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Assuma o Comando da Sua Vida · Geronimo Theml</title>
-  <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-WSTL4F8');</script>
-  <!-- End Google Tag Manager -->
   <meta name="description"
     content="Online e ao vivo, 29 de agosto. Descubra o ciclo invisível que te faz começar tudo e terminar nada. Sem replay." />
+
+  <!-- Preload da imagem do hero (LCP) — desktop e mobile -->
+  <link rel="preload" as="image" href="images/hero-bg.webp" media="(min-width:861px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="images/hero-bg-mobile.webp" media="(max-width:860px)" fetchpriority="high" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css" />
+
+  <!-- CSS crítico bloqueante (pequeno) -->
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Fontes: carregadas sem bloquear a renderização -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap"
+    media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" />
+  </noscript>
+
+  <!-- flag-icons (só usado no popup): carregado sem bloquear a renderização -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css" media="print"
+    onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css" />
+  </noscript>
 </head>
 
 <body>
@@ -42,7 +52,8 @@
     <div class="hero__overlay" aria-hidden="true"></div>
     <div class="hero__inner">
       <div class="hero__copy">
-        <img class="hero__logo" src="images/logo-comando.png" alt="Comando — Assuma o Comando da Sua Vida" />
+        <img class="hero__logo" src="images/logo-comando.webp" width="480" height="237"
+          alt="Comando — Assuma o Comando da Sua Vida" />
         <h1 class="hero__headline">
           Descubra o ciclo invisível que te faz <span class="hl">começar tudo</span> e <span class="hl">terminar
             nada.</span>
@@ -60,6 +71,7 @@
     </div>
   </header>
 
+  <main>
   <!-- PRA QUEM É -->
   <section class="section section--who">
     <div class="container">
@@ -136,8 +148,10 @@
     </div>
   </section>
 
+  </main>
+
   <footer class="footer">
-    <img class="footer__logo" src="images/logo-comando.png" alt="Comando" />
+    <img class="footer__logo" src="images/logo-comando.webp" width="480" height="237" loading="lazy" alt="Comando" />
     <p>© 2026 Geronimo Theml · Assuma o Comando da Sua Vida</p>
   </footer>
 
@@ -483,27 +497,53 @@
   </script>
 
 
-  <!--Script de Vendas VK - Transferência de UTMs-->
+  <!-- Carregamento ADIADO dos scripts de terceiros (GTM + VK).
+       Dispara na primeira interação do usuário ou ~3,5s após o load,
+       para não bloquear a renderização nem inflar o TBT. -->
   <script>
-    !function (w, d, c, u) {
-      (w.vkPixelSales = w.vkPixelSales || { _q: [] })._q.push(['init', c]);
-      (w.vkPageViewPixel = w.vkPageViewPixel || { _q: [] })._q.push(['init', c, 'page_view']);
-      ['https://cf.vkdigital.com.br/sales_pixel.js?v=56', 'https://cf.vkdigital.com.br/event_pageview.js'].forEach(function (src) {
-        var s = d.createElement('script'); s.src = src; s.async = 1; d.head.appendChild(s);
-      });
-    }(window, document, 'cK0i3FbAiLmfmeAOoJlK');
-  </script>
+    window.dataLayer = window.dataLayer || [];
+    (function () {
+      var loaded = false;
+      var events = ['scroll', 'mousemove', 'touchstart', 'keydown', 'click', 'pointerdown'];
+      var opts = { once: true, passive: true, capture: true };
 
-  <!--Script de Leads VK-->
-  <script async="true">
-    (function (w, d, s, u) {
-      w.vkPixel = w.vkPixel || { _q: [] };
-      w.vkPixel._q.push(['init', 'cK0i3FbAiLmfmeAOoJlK']);
-      var js = d.createElement(s);
-      js.src = u;
-      js.async = true;
-      d.head.appendChild(js);
-    })(window, document, 'script', 'https://cf.vkdigital.com.br/pixel.js?v=55');
+      function loadThirdParty() {
+        if (loaded) return;
+        loaded = true;
+        events.forEach(function (ev) { window.removeEventListener(ev, loadThirdParty, opts); });
+
+        // Google Tag Manager
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async = true;
+          j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WSTL4F8');
+
+        // VK - Pixel de Vendas (transferência de UTMs) + PageView
+        (function (w, d, c) {
+          (w.vkPixelSales = w.vkPixelSales || { _q: [] })._q.push(['init', c]);
+          (w.vkPageViewPixel = w.vkPageViewPixel || { _q: [] })._q.push(['init', c, 'page_view']);
+          ['https://cf.vkdigital.com.br/sales_pixel.js?v=56', 'https://cf.vkdigital.com.br/event_pageview.js'].forEach(function (src) {
+            var s = d.createElement('script'); s.src = src; s.async = 1; d.head.appendChild(s);
+          });
+        })(window, document, 'cK0i3FbAiLmfmeAOoJlK');
+
+        // VK - Pixel de Leads
+        (function (w, d, s, u) {
+          w.vkPixel = w.vkPixel || { _q: [] };
+          w.vkPixel._q.push(['init', 'cK0i3FbAiLmfmeAOoJlK']);
+          var js = d.createElement(s); js.src = u; js.async = true; d.head.appendChild(js);
+        })(window, document, 'script', 'https://cf.vkdigital.com.br/pixel.js?v=55');
+      }
+
+      events.forEach(function (ev) { window.addEventListener(ev, loadThirdParty, opts); });
+      window.addEventListener('load', function () { setTimeout(loadThirdParty, 3500); });
+    })();
   </script>
 </body>
 

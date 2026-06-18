@@ -95,7 +95,7 @@ body {
 
 /* ---------- TOPBAR ---------- */
 .topbar {
-  background: var(--red);
+  background: #c1121a; /* vermelho mais escuro p/ contraste AA com texto branco */
   color: #fff;
   text-align: center;
   font-size: .85rem;
@@ -144,7 +144,7 @@ body {
 .hero__bg {
   position: absolute;
   inset: 0;
-  background-image: url('images/hero-bg.png');
+  background-image: url('images/hero-bg.webp');
   background-size: cover;
   background-position: top center;
   z-index: 0;
@@ -676,6 +676,7 @@ body {
     height: 64vw;
     max-height: 460px;
     background-position: center top;
+    background-image: url('images/hero-bg-mobile.webp');
   }
   .hero__bg::after {
     content: "";
